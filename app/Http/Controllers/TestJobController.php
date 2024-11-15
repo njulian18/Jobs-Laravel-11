@@ -28,12 +28,14 @@ class TestJobController extends Controller
     }
 
     // fallo
-    public function testFailure($argument)
+    public function testFailure()
     {
         $runner = new BackgroundJobRunner();
         try {
-            MyJobClass::dispatch();
-            return response()->json(['message' => 'Failure test initiated']);
+            $exception = new \Exception("Simulated failure in job execution.");
+             $runner->runJob(MyJobClass::class, 'executeJobWithFailure', [$exception]);
+    
+            return response()->json(['message' => 'Error test completed']);
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Failure test completed',
@@ -42,17 +44,20 @@ class TestJobController extends Controller
         }
     }
     
+    
+    
+    
     public function startWorker()
     {
         try {
             $process = new Process(['php', 'artisan', 'queue:work', '--daemon']);
             $process->start();
     
-            // Espera unos segundos para verificar si el proceso ha iniciado correctamente
-            sleep(1);
+           
+            sleep(2);
     
             if ($process->isRunning()) {
-                echo "Worker started successfully!\n";  // Imprime el mensaje en la consola
+                echo "Worker started successfully!\n";  
                 Log::info('Worker started!');
             } else {
                 echo "Worker failed to start.\n";
@@ -66,14 +71,4 @@ class TestJobController extends Controller
     
     
 
-    public function stopWorker()
-    {
-        try {
-            exec('pkill -f "php artisan queue:work"');
-            Log::info('Worker stopped!');
-            return response()->json(['message' => 'Worker stopped']);
-        } catch (\Exception $e) {
-            return response()->json(['error' => 'Error stopping worker: ' . $e->getMessage()]);
-        }
-    }
 }

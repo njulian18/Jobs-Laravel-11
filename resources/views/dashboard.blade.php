@@ -26,10 +26,7 @@
                         Start Worker
                     </button>
 
-                    <button id="stopWorker"
-                        class="bg-gray-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-50 transition duration-200 ease-in-out shadow-lg ml-4">
-                        Stop Worker
-                    </button>
+                
                 </div>
             </div>
         </div>
